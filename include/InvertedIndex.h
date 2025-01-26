@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <istream>
 
+
 struct Entry {
     size_t doc_id, count;
     bool operator ==(const Entry& other) const {
@@ -40,11 +41,11 @@ class InvertedIndex {
 
     std::vector<Entry> GetWordCount(const std::string& word);
 
-    void fill_freq_dictionary(std::string& in_word, size_t doc_num);
+    void fill_freq_dictionary(const std::string& in_word, size_t doc_num);
 
     void printIndex();
 
 
 void process_text_by_thread(const std::string& in_text, size_t& n);//эти две функции надо сделать с возвращением значений, чтобы работать с одним экземпляром индекса
-void optimize_threads_pool_with_hardware(const std::vector<std::string>& inTextDocs);
+void optimize_threads_pool_with_hardware(const std::vector<std::string>& in_text_docs);
 };
