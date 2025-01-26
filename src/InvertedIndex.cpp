@@ -30,9 +30,8 @@ void InvertedIndex::fill_freq_dictionary(std::string& in_word, size_t doc_num) {
 }
 
 
-void process_text_by_thread(const std::string& in_text, int n) {
+void InvertedIndex::process_text_by_thread(const std::string& in_text, size_t& n) {
     std::istringstream docStream(in_text);
-    InvertedIndex* indx = new InvertedIndex; //это неправильно
 
     while (docStream) {
         std::string word;
@@ -41,20 +40,14 @@ void process_text_by_thread(const std::string& in_text, int n) {
         if (word.empty()) {
             continue;
         }
-        else {
-            //выполнить алгоритм 1. (стр 333 дневника)
-           indx->fill_freq_dictionary(word, n);
-           //std::cout <<word << ": " << indx->GetWordCount(word)[n].doc_id <<" - "
-           //<< indx->GetWordCount(word)[n].count <<std::endl;  
+        else {        
+           fill_freq_dictionary(word, n);
         }
     }
-    indx->printIndex();
-    
-    delete indx; 
 }
 
 
-void optimize_threads_pool_with_hardware(const std::vector<std::string>& inTextDocs) {
+void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::string>& inTextDocs) {
     size_t hardWareConcurrency = std::thread::hardware_concurrency();
     size_t threadNumbers = (inTextDocs.size() > hardWareConcurrency) ?  hardWareConcurrency: inTextDocs.size();
     size_t  blockSize = inTextDocs.size()/threadNumbers;
@@ -64,26 +57,30 @@ void optimize_threads_pool_with_hardware(const std::vector<std::string>& inTextD
     size_t start = 0;
     std::vector<std::thread> threads_pool;
     
-    for(unsigned int i = 0; i < threadNumbers - 1; ++i) {
+    for(size_t i = 0; i < threadNumbers - 1; ++i) {
 
-        for(unsigned int j = start;j < (blockSize + start);++j) {           
-            threads_pool.push_back(std::move(std::thread(process_text_by_thread, std::cref(inTextDocs[j]), j)));
+        for(size_t j = start;j < (blockSize + start);++j) {           
+            threads_pool.push_back(std::move(std::thread(process_text_by_thread,this, std::ref(inTextDocs[j]), std::ref(j))));
+            // дополнительно к явным параметрам функции передаем указатель на экземпляр класса ( иначе не будет работать)
         }
         start += blockSize;
     }
 
-    for(unsigned int j = start; j < inTextDocs.size(); ++j) {
-        threads_pool.push_back(std::move(std::thread(process_text_by_thread, std::cref(inTextDocs[j]), j)));
+    for(size_t j = start; j < inTextDocs.size(); ++j) {
+        threads_pool.push_back(std::move(std::thread(process_text_by_thread, this, std::ref(inTextDocs[j]), std::ref(j))));
+        // дополнительно к явным параметрам функции передаем указатель на экземпляр класса ( иначе не будет работать)
     }
 
     for(auto& t: threads_pool) {
         if(t.joinable()) t.join();
     }
+    printIndex();
   } 
 
 void InvertedIndex::UpdateDocumentBase( std::vector<std::string> inTextDocs) {
     docs = inTextDocs;
     optimize_threads_pool_with_hardware(inTextDocs);
+   
 }
    
 

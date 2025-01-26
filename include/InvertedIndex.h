@@ -24,6 +24,7 @@ class InvertedIndex {
     std::vector<std::string> docs; // список содержимого документов
     std::map<std::string, std::vector<Entry>> freq_dictionary; // частотный словарь
     std::mutex freqDictionaryAccess;
+    std::istringstream docStream;
    
     void show_docs() {
 
@@ -33,8 +34,6 @@ class InvertedIndex {
     }    
 
     public:
-   // std::map<std::string, std::vector<Entry>> freq_dictionary; // частотный словарь
-
     InvertedIndex() = default;
 
     void UpdateDocumentBase(std::vector<std::string> input_docs);
@@ -45,8 +44,7 @@ class InvertedIndex {
 
     void printIndex();
 
-    void process_text_by_thread(const std::string& in_text, int n);
-};
 
-//void process_text_by_thread(const std::string& in_text, int n);//эти две функции надо сделать с возвращением значений, чтобы работать с одним экземпляром индекса
+void process_text_by_thread(const std::string& in_text, size_t& n);//эти две функции надо сделать с возвращением значений, чтобы работать с одним экземпляром индекса
 void optimize_threads_pool_with_hardware(const std::vector<std::string>& inTextDocs);
+};
