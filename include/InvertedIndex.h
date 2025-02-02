@@ -22,17 +22,10 @@ struct Entry {
 
 
 class InvertedIndex {
-    std::vector<std::string> docs; // список содержимого документов
-    std::map<std::string, std::vector<Entry>> freq_dictionary; // частотный словарь
+    std::vector<std::string> docs;
+    std::map<std::string, std::vector<Entry>> freq_dictionary;
     std::mutex freqDictionaryAccess;
-    std::istringstream docStream;
-   
-    void show_docs() {
-
-         for(int i = 0;i < docs.size(); ++i) {
-            std::cout << i << " doc_id: " <<  docs[i] << std::endl;
-        }
-    }    
+    std::istringstream docStream;    
 
     public:
     InvertedIndex() = default;
@@ -40,12 +33,14 @@ class InvertedIndex {
     void UpdateDocumentBase(std::vector<std::string> input_docs);
 
     std::vector<Entry> GetWordCount(const std::string& word);
-
+   
+    private:
     void fill_freq_dictionary(const std::string& in_word, size_t doc_num);
-
+   
     void printIndex();
 
 
-void process_text_by_thread(const std::string& in_text, size_t& n);//эти две функции надо сделать с возвращением значений, чтобы работать с одним экземпляром индекса
-void optimize_threads_pool_with_hardware(const std::vector<std::string>& in_text_docs);
+    void process_text_by_thread(const std::string& in_text, size_t& n);
+
+    void optimize_threads_pool_with_hardware(const std::vector<std::string>& in_text_docs);
 };

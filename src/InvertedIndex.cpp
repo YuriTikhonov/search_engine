@@ -1,4 +1,4 @@
-#include "InvertedIndex.h"
+#include "../include/InvertedIndex.h"
 
 void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_num) {
     
@@ -54,32 +54,40 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     for(size_t i = 0; i < thread_numbers - 1; ++i) {
 
         for(size_t j = start;j < (block_size + start);++j) {           
-            threads_pool.push_back(std::move(std::thread(process_text_by_thread,this, std::ref(in_text_docs[j]), std::ref(j))));
-            // дополнительно к явным параметрам функции передаем указатель на экземпляр класса ( иначе не будет работать)
+            threads_pool.push_back(std::move(std::thread(process_text_by_thread,this,
+             std::ref(in_text_docs[j]), std::ref(j))));
         }
         start += block_size;
     }
 
     for(size_t j = start; j < in_text_docs.size(); ++j) {
-        threads_pool.push_back(std::move(std::thread(process_text_by_thread, this, std::ref(in_text_docs[j]), std::ref(j))));
-        // дополнительно к явным параметрам функции передаем указатель на экземпляр класса ( иначе не будет работать)
+        threads_pool.push_back(std::move(std::thread(process_text_by_thread, this,
+         std::ref(in_text_docs[j]), std::ref(j))));
     }
 
     for(auto& t: threads_pool) {
         if(t.joinable()) t.join();
     }
-    printIndex();
+    //printIndex();
   } 
+
 
 void InvertedIndex::UpdateDocumentBase( std::vector<std::string> in_text_docs) {
     docs = in_text_docs;
     optimize_threads_pool_with_hardware(in_text_docs);  
 }
-   
+ 
 
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
     std::vector<Entry> result;
     result = freq_dictionary[word];
+
+    std::cout << "Word: " << word << std::endl;
+    std::cout << "Count: " << result.size() << std::endl;
+
+    for(std::size_t i = 0; i < result.size(); ++i) {
+        std::cout << result[i].doc_id << " " << result[i].count << std::endl;
+    }
     
     return result;
 }

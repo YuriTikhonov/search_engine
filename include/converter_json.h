@@ -1,12 +1,15 @@
 #pragma once
-#include "nlohmann/json.hpp"
-#include "InvertedIndex.h"
+
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include "windows.h"
+
+#include "nlohmann/json.hpp"
+#include "InvertedIndex.h"
+#include "SearchServer.h"
 
 
 class ConverterJSON {
