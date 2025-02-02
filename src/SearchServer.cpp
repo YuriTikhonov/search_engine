@@ -4,6 +4,7 @@
 //SearchServer::SearchServer(InvertedIndex &idx) : _index(idx) {
     //std::cout << "SearchServer created" << std::endl;  
 //}
+/*
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
     std::vector<std::vector<RelativeIndex>> result;
 
@@ -18,3 +19,4 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
     }
     return result;
 }
+*/

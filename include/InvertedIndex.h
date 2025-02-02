@@ -1,16 +1,11 @@
 #pragma once
 #include "converter_json.h"
 
-#include <vector>
 #include <map>
-#include <string>
-#include <iostream>
 #include <iterator>
 #include <thread>
 #include <mutex>
 #include <algorithm>
-#include <istream>
-
 
 struct Entry {
     size_t doc_id, count;
@@ -28,7 +23,7 @@ class InvertedIndex {
     std::istringstream docStream;    
 
     public:
-    InvertedIndex() = default;
+    InvertedIndex();// = default;
 
     void UpdateDocumentBase(std::vector<std::string> input_docs);
 

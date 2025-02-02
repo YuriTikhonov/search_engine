@@ -1,8 +1,8 @@
 #pragma once
-
+#include "converter_json.h"
 #include "InvertedIndex.h"
-#include <vector>
-#include <string>
+#include "windows.h"
+#include "nlohmann/json.hpp"
 
 struct RelativeIndex {
     size_t doc_id;
@@ -24,7 +24,7 @@ class SearchServer {
     * чтобы SearchServer мог узнать частоту слов встречаемых в
     запросе
     */
-    //SearchServer() = default;
+    SearchServer() = default;
     //SearchServer(const InvertedIndex& idx): _index(idx){ };
     /**
     * Метод обработки поисковых запросов
@@ -33,5 +33,19 @@ class SearchServer {
     * @return возвращает отсортированный список релевантных ответов для
     заданных запросов
     */
-    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input)  {
+    std::vector<std::vector<RelativeIndex>> result;
+
+    for (const auto& query : queries_input) {
+       
+       // std::vector<Entry> word_counts = _index.GetWordCount(query);
+        std::vector<RelativeIndex> relative_indices;
+       // for (const auto& entry : word_counts) {
+        //    RelativeIndex relative_index{entry.doc_id, entry.count};
+          //  relative_indices.push_back(relative_index);
+       // }
+        result.push_back(relative_indices);
+    }
+    return result;
+};
 };

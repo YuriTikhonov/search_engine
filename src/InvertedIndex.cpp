@@ -105,3 +105,5 @@ void InvertedIndex::printIndex() {
 	    }
         std::cout << "---------end----" << std::endl;
     }
+
+    InvertedIndex::InvertedIndex() = default;
