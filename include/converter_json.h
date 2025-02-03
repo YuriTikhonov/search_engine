@@ -8,8 +8,8 @@
 #include "windows.h"
 
 #include "nlohmann/json.hpp"
-#include "InvertedIndex.h"
-#include "SearchServer.h"
+
+
 
 
 class ConverterJSON {

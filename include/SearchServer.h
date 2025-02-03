@@ -15,7 +15,7 @@ struct RelativeIndex {
 
 
 class SearchServer {
-    //InvertedIndex _index;
+    InvertedIndex _index;
     public:
     
     /*
@@ -24,7 +24,7 @@ class SearchServer {
     * чтобы SearchServer мог узнать частоту слов встречаемых в
     запросе
     */
-    SearchServer() = default;
+    //SearchServer() = default;
     //SearchServer(const InvertedIndex& idx): _index(idx){ };
     /**
     * Метод обработки поисковых запросов

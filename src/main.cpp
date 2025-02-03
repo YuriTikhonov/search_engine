@@ -1,5 +1,6 @@
 #include "converter_json.h"
 #include "SearchServer.h"
+#include "InvertedIndex.h"
 #include <thread>
 #include <mutex>
 
