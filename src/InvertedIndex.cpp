@@ -4,23 +4,26 @@ void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_
     
     if(freq_dictionary.find(in_word) == freq_dictionary.end()) {
         std::vector<Entry> entry{{doc_num,1}};
-        freqDictionaryAccess.lock();
+        std::lock_guard<std::mutex> lock(freqDictionaryAccess);
+        //freqDictionaryAccess.lock();
         freq_dictionary.emplace(std::make_pair(in_word, entry));
-        freqDictionaryAccess.unlock();
+        //freqDictionaryAccess.unlock();
     }
     else {
 
         for(size_t i = 0; i < freq_dictionary[in_word].size(); ++i) {
             if(freq_dictionary[in_word][i].doc_id == doc_num) {
-                freqDictionaryAccess.lock();
+                std::lock_guard<std::mutex> lock(freqDictionaryAccess);
+                //freqDictionaryAccess.lock();
                 freq_dictionary[in_word][i].count++;
-                freqDictionaryAccess.unlock();
+                //freqDictionaryAccess.unlock();
                 return;
             }
             else if(i == freq_dictionary[in_word].size() - 1) {
-                freqDictionaryAccess.lock();
+                std::lock_guard<std::mutex> lock(freqDictionaryAccess);
+                //freqDictionaryAccess.lock();
                 freq_dictionary[in_word].push_back(Entry{doc_num,1});
-                freqDictionaryAccess.unlock();
+                //freqDictionaryAccess.unlock();
             }   
         }
     }   
@@ -68,7 +71,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     for(auto& t: threads_pool) {
         if(t.joinable()) t.join();
     }
-    //printIndex();
+    printIndex();
   } 
 
 
@@ -81,14 +84,7 @@ void InvertedIndex::UpdateDocumentBase( std::vector<std::string> in_text_docs) {
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
     std::vector<Entry> result;
     result = freq_dictionary[word];
-
-    std::cout << "Word: " << word << std::endl;
-    std::cout << "Count: " << result.size() << std::endl;
-
-    for(std::size_t i = 0; i < result.size(); ++i) {
-        std::cout << result[i].doc_id << " " << result[i].count << std::endl;
-    }
-    
+   
     return result;
 }
 
@@ -105,5 +101,3 @@ void InvertedIndex::printIndex() {
 	    }
         std::cout << "---------end----" << std::endl;
     }
-
-    InvertedIndex::InvertedIndex() = default;

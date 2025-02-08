@@ -23,7 +23,9 @@ class InvertedIndex {
     std::istringstream docStream;    
 
     public:
-    InvertedIndex();// = default;
+    InvertedIndex() = default;
+    InvertedIndex(const InvertedIndex&) {};
+   
 
     void UpdateDocumentBase(std::vector<std::string> input_docs);
 
