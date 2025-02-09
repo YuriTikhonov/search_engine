@@ -30,15 +30,15 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
             throw std::runtime_error("Unable to open file: " + file_path);
         }
         else {
-            //std::string file_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-            //source_files_contents.push_back(file_content);
-            std::string lines;
-            std::string line;
+            std::string file_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            source_files_contents.push_back(file_content);
+           // std::string lines;
+           // std::string line;
             
-            while(std::getline(file, line)) {
-                lines += line;
-            }
-            source_files_contents.push_back(lines);    
+           // while(std::getline(file, line)) {
+            //    lines += line;
+           // }
+           // source_files_contents.push_back(lines);    
             file.close();   
         }     
     }

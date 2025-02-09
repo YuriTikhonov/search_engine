@@ -49,19 +49,19 @@ int main() {
     std::vector<std::vector<Entry>> result;
     std::unordered_set<std::string> :: iterator itr;
     int count = 0;
+    
     for (itr = query_set.begin(); itr != query_set.end(); itr++) {
         std::vector<Entry> word_count = inverted_index.GetWordCount(*itr);
         result.push_back(word_count);
 
-        std::cout <<"itr# " << count << "Words count for: " << *itr << " : ";
+        // <<"itr# " << count << "Words count for: " << *itr << " : ";
         for(auto& it: word_count) {
-        std::cout << "(" << it.doc_id << ", " << it.count << ") ";
+       // std::cout << "(" << it.doc_id << ", " << it.count << ") ";
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
         count++;
     }
   
-     //inverted_index.printIndex();
      SearchServer server(inverted_index);
      std::vector<std::vector<RelativeIndex>> relative_indx_vec = server.search(queries);
 

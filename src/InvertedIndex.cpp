@@ -1,32 +1,30 @@
 #include "../include/InvertedIndex.h"
 
 void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_num) {
-    
+ 
     if(freq_dictionary.find(in_word) == freq_dictionary.end()) {
         std::vector<Entry> entry{{doc_num,1}};
         std::lock_guard<std::mutex> lock(freqDictionaryAccess);
-        //freqDictionaryAccess.lock();
         freq_dictionary.emplace(std::make_pair(in_word, entry));
-        //freqDictionaryAccess.unlock();
     }
     else {
-
-        for(size_t i = 0; i < freq_dictionary[in_word].size(); ++i) {
-            if(freq_dictionary[in_word][i].doc_id == doc_num) {
+        
+        for(size_t i = 0; i < freq_dictionary.at(in_word).size(); ++i) {
+            
+             if(freq_dictionary.at(in_word)[i].doc_id == doc_num) {
                 std::lock_guard<std::mutex> lock(freqDictionaryAccess);
-                //freqDictionaryAccess.lock();
-                freq_dictionary[in_word][i].count++;
-                //freqDictionaryAccess.unlock();
-                return;
+                freq_dictionary.at(in_word)[i].count++;
+             
+                break;
             }
-            else if(i == freq_dictionary[in_word].size() - 1) {
+            else if(i == freq_dictionary.at(in_word).size() - 1) {
                 std::lock_guard<std::mutex> lock(freqDictionaryAccess);
-                //freqDictionaryAccess.lock();
-                freq_dictionary[in_word].push_back(Entry{doc_num,1});
-                //freqDictionaryAccess.unlock();
+                freq_dictionary.at(in_word).push_back(Entry{doc_num,1});
+                
+                break;  
             }   
-        }
-    }   
+        }         
+    }  
 }
 
 
@@ -41,7 +39,7 @@ void InvertedIndex::process_text_by_thread(const std::string& in_text, size_t& n
             continue;
         }
         else {        
-           fill_freq_dictionary(word, n);
+           fill_freq_dictionary(word, n-1);
         }
     }
 }
