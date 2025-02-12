@@ -23,18 +23,18 @@ class InvertedIndex {
     std::istringstream docStream;    
 
     public:
-    InvertedIndex() = default;
-    InvertedIndex(const InvertedIndex&) {};
-   
+    //InvertedIndex() = default;
+    InvertedIndex(InvertedIndex&) {};
+  
 
     void UpdateDocumentBase(std::vector<std::string> input_docs);
 
     std::vector<Entry> GetWordCount(const std::string& word);
-   
+    void printIndex();
     private:
     void fill_freq_dictionary(const std::string& in_word, size_t doc_num);
    
-    void printIndex();
+    
 
 
     void process_text_by_thread(const std::string& in_text, size_t& n);
