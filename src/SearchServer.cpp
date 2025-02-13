@@ -1,13 +1,13 @@
 #include "SearchServer.h"
 
 
-std::vector<std::string> SearchServer::sort_query_words(std::vector<std::string>& words) {
+//std::vector<std::string> SearchServer::sort_query_words(std::vector<std::string>& words) {
   // Sort words in descending order based on their frequency
   //std::sort(words.begin(), words.end(), [](const std::string& a, const std::string& b) {
      // return freq_dictionary.at(a).size() > freq_dictionary.at(b).size();
  // });
-  return words;
-}
+ // return words;
+//}
 
 
 std::vector<std::string> SearchServer::create_unique_query_words(std::string& words) {
