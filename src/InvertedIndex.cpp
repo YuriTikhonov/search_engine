@@ -39,7 +39,7 @@ void InvertedIndex::process_text_by_thread(const std::string& in_text, size_t& n
             continue;
         }
         else {        
-           fill_freq_dictionary(word, n-1);//разобраться с номерами документов
+           fill_freq_dictionary(word, n-1);
         }
     }
 }
@@ -54,7 +54,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     
     for(size_t i = 0; i < thread_numbers - 1; ++i) {
 
-        if(in_text_docs.size() > hard_ware_concurrency) { // протестировать кол-во текстовых файлов больше ядер!
+        if(in_text_docs.size() > hard_ware_concurrency) {
             for(size_t j = start;j < (block_size + start);++j) {           
                 threads_pool.push_back(std::move(std::thread(process_text_by_thread,this,
                  std::ref(in_text_docs[j]), std::ref(j))));
@@ -76,7 +76,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
 
 
 void InvertedIndex::UpdateDocumentBase( std::vector<std::string> in_text_docs) {
-    docs = in_text_docs;
+    //docs = in_text_docs;
     optimize_threads_pool_with_hardware(in_text_docs);  
 }
  

@@ -40,7 +40,6 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
     size_t absoluteRelevance = 0;
    
     for (auto &i: docList) {
-       
       size_t relevance = 0.0f;  
       
         for (auto &word: request) {
@@ -74,7 +73,7 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
    
    // if (result.size() > responsesLimit)
        // result.resize(responsesLimit);
-
+   
     return result;
 } 
 
@@ -120,9 +119,9 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
     std::vector<std::string> query_set = create_unique_query_words(query);
     int max_abs_relevance = 0;
     int abs_relevance = 0;
-
+      
     for(auto it : query_set) {
-       docs_ids.clear();        
+      docs_ids.clear();      
       std::vector<word_frec_pair> pair_vec;
                
       std::vector<Entry> word_counts = _index.GetWordCount(it);  
@@ -139,9 +138,12 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
       });
                
       for(auto& e : pair_vec) {
+        
                     
-        std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);
-                   
+        std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);// TBS!!! this
+
+        std::cout << "entry_size: " << word_request_counts.size() << std::endl; 
+
         for (const auto& entry : word_request_counts) {
           docs_ids.push_back(entry.doc_id);                      
         }
@@ -162,7 +164,8 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
     result.push_back(relative_indixes);
     i++;
   }    
-  printResult(result);   
+  printResult(result);
+     
 
   return result;
 }
