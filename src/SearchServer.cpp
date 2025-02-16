@@ -1,13 +1,5 @@
 #include "SearchServer.h"
 
-
-//std::vector<std::string> SearchServer::sort_query_words(std::vector<std::string>& words) {
-  // Sort words in descending order based on their frequency
-  //std::sort(words.begin(), words.end(), [](const std::string& a, const std::string& b) {
-     // return freq_dictionary.at(a).size() > freq_dictionary.at(b).size();
- // });
- // return words;
-//}
  SearchServer::SearchServer( InvertedIndex idx): _index(idx) {
         std::cout << "Search Server created"  <<std::endl;
     };
@@ -46,33 +38,32 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
     const std::vector<std::string> &request) {
     std::vector<RelativeIndex> result;
     size_t absoluteRelevance = 0;
-    
-   // size_t relevance = 0.0f;??
+   
     for (auto &i: docList) {
+       
       size_t relevance = 0.0f;  
-        std::cout << "i: " << i << " ";
+      
         for (auto &word: request) {
-            std::vector<Entry>temp = _index.GetWordCount(word);  // empty returned
-          // std::cout << " word:  " << word;
+            std::vector<Entry>temp = _index.GetWordCount(word);
+           
             for(auto& w : temp) {
-                //std::cout <<"{" << w.doc_id << ", " << w.count << "}";
-                if (w.doc_id == i)
-                 
-                    relevance += w.count;
-                     std::cout <<"w.count: " << w.count << " relevance: " << relevance << std::endl;
+                
+              if (w.doc_id == i) {
+                  relevance += w.count;
+              }        
             } 
-            //absoluteRelevance += relevance;
           }
-         //std::cout << std::endl;
+                 
         if(relevance > absoluteRelevance)
            absoluteRelevance = relevance;
-        std::cout   << " relevance: " << relevance << " abs_rel: " << absoluteRelevance  << std::endl;
+       
         RelativeIndex currentDoc = {i, (float) relevance};
         result.push_back(currentDoc);
     }
     
-    for (auto &doc: result)
-        doc.rank /= (float) absoluteRelevance;
+    for (auto &doc: result) {
+      doc.rank /= (float) absoluteRelevance;
+    }
 
     std::sort(result.begin(), result.end(), [](const RelativeIndex &first, const RelativeIndex &second) {
         if (first.rank == second.rank)
@@ -88,7 +79,7 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
 } 
 
 void SearchServer::printResult(const std::vector<std::vector<RelativeIndex>> &answers) {
-   // std::cout << std::endl;
+    std::cout << std::endl;
 
     for (int i = 0; i < answers.size(); ++i) {
         //std::cout << "request" << WordHandler::getPositionNumber(i + 1) << ":" << std::endl;
@@ -109,76 +100,69 @@ void SearchServer::printResult(const std::vector<std::vector<RelativeIndex>> &an
 
 
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
-        std::vector<std::vector<RelativeIndex>> result;
-        std::vector<RelativeIndex> relative_indixes;
-        ConverterJSON converter;
+  std::vector<std::vector<RelativeIndex>> result;
+  std::vector<RelativeIndex> relative_indixes;
+  ConverterJSON converter;
 
-        try {
-            _index.UpdateDocumentBase(converter.GetTextDocuments());
-        }
-        catch (const std::exception& e) {
-            std::cout << "Caution! File is missing " << e.what(); //записать ошибку в лог
-        }
+  try {
+    _index.UpdateDocumentBase(converter.GetTextDocuments());
+  }
+  catch (const std::exception& e) {
+    std::cout << "Caution! File is missing " << e.what(); //записать ошибку в лог
+  }
                     
-        int i = 0;
-        typedef std::pair<std::string,int> word_frec_pair;
+  int i = 0;
+  typedef std::pair<std::string,int> word_frec_pair;
 
-        for (auto query : queries_input) {
-           docs_ids.clear();
+  for (auto query : queries_input) {
+    
         
-            std::vector<std::string> query_set = create_unique_query_words(query);
-            int max_abs_relevance = 0;
-            int abs_relevance = 0;
+    std::vector<std::string> query_set = create_unique_query_words(query);
+    int max_abs_relevance = 0;
+    int abs_relevance = 0;
 
-            for(auto it : query_set) {
+    for(auto it : query_set) {
+       docs_ids.clear();        
+      std::vector<word_frec_pair> pair_vec;
                
-                std::vector<word_frec_pair> pair_vec;
+      std::vector<Entry> word_counts = _index.GetWordCount(it);  
                
-                std::vector<Entry> word_counts = _index.GetWordCount(it);  
-               
-                int frequency = 0;
+      int frequency = 0;
 
-                for(auto& e : word_counts) {
-                   frequency += e.count;
-                }
-                pair_vec.push_back(std::make_pair(it,frequency));
-                std::sort(pair_vec.begin(),pair_vec.end(),[](auto &left, auto &right) {
+      for(auto& e : word_counts) {
+        frequency += e.count;
+      }
+      pair_vec.push_back(std::make_pair(it,frequency));
+      std::sort(pair_vec.begin(),pair_vec.end(),[](auto &left, auto &right) {
                    
-                    return left.second < right.second;
-                });
-                //docs_ids.clear();
-
-                for(auto& e : pair_vec) {
+        return left.second < right.second;
+      });
+               
+      for(auto& e : pair_vec) {
                     
-                    std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);
+        std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);
                    
-                    for (const auto& entry : word_request_counts) {
-                        docs_ids.push_back(entry.doc_id);                      
-                    }
+        for (const auto& entry : word_request_counts) {
+          docs_ids.push_back(entry.doc_id);                      
+        }
 
-                    for(auto& it: docs_ids) {
+        for(auto& it: docs_ids) {
                 
-                       for (const auto& entry : word_counts) {
+          for (const auto& entry : word_counts) {
                                                    
-                           if(entry.doc_id == it) {
-                               abs_relevance += entry.count;
-                           }                           
-                        }
+            if(entry.doc_id == it) {
+              abs_relevance += entry.count;
+            }                           
+          }
                   
-                    } 
-                }
-           
-                std::cout << std::endl;
-        
-            }
-            relative_indixes = calculate_relevance(docs_ids, query_set);
-            result.push_back(relative_indixes);
-            i++;
-        }
-       
-        printResult(result);
-        
-
-        return result;
+        } 
+      }     
     }
+    relative_indixes = calculate_relevance(docs_ids, query_set);
+    result.push_back(relative_indixes);
+    i++;
+  }    
+  printResult(result);   
 
+  return result;
+}
