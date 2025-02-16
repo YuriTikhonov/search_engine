@@ -71,7 +71,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     for(auto& t: threads_pool) {
         if(t.joinable()) t.join();
     }
-    //printIndex();
+   // printIndex();
   } 
 
 
