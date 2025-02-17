@@ -136,15 +136,17 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
                    
         return left.second < right.second;
       });
-               
+       //_index.printIndex();
+
       for(auto& e : pair_vec) {
         
                     
         std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);// TBS!!! this
 
-        std::cout << "entry_size: " << word_request_counts.size() << std::endl; 
+       // std::cout << "entry_size: " << word_request_counts.size() << std::endl; 
 
         for (const auto& entry : word_request_counts) {
+         // std::cout << " " << entry.doc_id << std::endl;
           docs_ids.push_back(entry.doc_id);                      
         }
 
