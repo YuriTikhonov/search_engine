@@ -73,8 +73,11 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 }
 
 
-void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>answers) {
-
+void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
+    std::ofstream file_json("answers.json");
+    nlohmann::json answers_to_write = answers;
+    file_json << answers_to_write;
+    file_json.close();
 }
 
 

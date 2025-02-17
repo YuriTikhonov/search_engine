@@ -9,6 +9,7 @@
 #include "windows.h"
 
 #include "nlohmann/json.hpp"
+#include "InvertedIndex.h"
 
 
 
@@ -22,7 +23,7 @@ class ConverterJSON {
 
     public:
 
-    ConverterJSON();// = default;
+    ConverterJSON();
 
     std::vector<std::string> GetTextDocuments();
 
@@ -30,5 +31,5 @@ class ConverterJSON {
 
     std::vector<std::string> GetRequests();
 
-    void putAnswers(std::vector<std::vector<std::pair<int, float> >> answers);
+     void putAnswers(std::vector<std::vector<std::pair<int, float>>>);
 };

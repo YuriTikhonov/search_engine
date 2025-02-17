@@ -70,10 +70,12 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
         else
             return first.rank > second.rank;
     });
+    int responses_limit = _converter.GetResponsesLimit();
    
-   // if (result.size() > responsesLimit)
-       // result.resize(responsesLimit);
-   
+    if (result.size() > responses_limit) {
+      result.resize(responses_limit);
+    }
+        
     return result;
 } 
 
@@ -81,7 +83,6 @@ void SearchServer::printResult(const std::vector<std::vector<RelativeIndex>> &an
     std::cout << std::endl;
 
     for (int i = 0; i < answers.size(); ++i) {
-        //std::cout << "request" << WordHandler::getPositionNumber(i + 1) << ":" << std::endl;
 
         if (answers[i].empty())
             std::cout << "  result: false" << std::endl;
@@ -91,31 +92,32 @@ void SearchServer::printResult(const std::vector<std::vector<RelativeIndex>> &an
         }
 
         for (auto j : answers[i])
-            std::cout << "    docID: " << j.doc_id << ", rank: " << j.rank << std::endl;
+            std::cout << "    doc_id: " << j.doc_id << ", rank: " << j.rank << std::endl;
 
         std::cout << std::endl;
     }
 }
 
+std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_format(const std::vector<std::vector<RelativeIndex>>& _indx) {
+  std::vector<std::vector<std::pair<int, float>>> json_set;
 
+
+  return json_set;
+}
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
   std::vector<std::vector<RelativeIndex>> result;
   std::vector<RelativeIndex> relative_indixes;
-  ConverterJSON converter;
 
   try {
-    _index.UpdateDocumentBase(converter.GetTextDocuments());
+    _index.UpdateDocumentBase(_converter.GetTextDocuments());
   }
   catch (const std::exception& e) {
     std::cout << "Caution! File is missing " << e.what(); //записать ошибку в лог
   }
                     
-  int i = 0;
   typedef std::pair<std::string,int> word_frec_pair;
 
-  for (auto query : queries_input) {
-    
-        
+  for (auto query : queries_input) {  
     std::vector<std::string> query_set = create_unique_query_words(query);
     int max_abs_relevance = 0;
     int abs_relevance = 0;
@@ -136,17 +138,11 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
                    
         return left.second < right.second;
       });
-       //_index.printIndex();
-
-      for(auto& e : pair_vec) {
-        
-                    
-        std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);// TBS!!! this
-
-       // std::cout << "entry_size: " << word_request_counts.size() << std::endl; 
+    
+      for(auto& e : pair_vec) {       
+        std::vector<Entry> word_request_counts = _index.GetWordCount(e.first);
 
         for (const auto& entry : word_request_counts) {
-         // std::cout << " " << entry.doc_id << std::endl;
           docs_ids.push_back(entry.doc_id);                      
         }
 
@@ -157,17 +153,16 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
             if(entry.doc_id == it) {
               abs_relevance += entry.count;
             }                           
-          }
-                  
+          }        
         } 
       }     
     }
     relative_indixes = calculate_relevance(docs_ids, query_set);
     result.push_back(relative_indixes);
-    i++;
   }    
   printResult(result);
-     
+  std::vector<std::vector<std::pair<int, float>>> json_answer = prepair_json_format(result);
+  _converter.putAnswers(json_answer);
 
   return result;
 }
