@@ -42,22 +42,23 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
     for (auto &i: docList) {
       size_t relevance = 0.0f;  
       
-        for (auto &word: request) {
-            std::vector<Entry>temp = _index.GetWordCount(word);
+      for (auto &word: request) {
+        std::vector<Entry>temp = _index.GetWordCount(word);
            
-            for(auto& w : temp) {
+        for(auto& w : temp) {
                 
-              if (w.doc_id == i) {
-                  relevance += w.count;
-              }        
-            } 
-          }
+          if (w.doc_id == i) {
+            relevance += w.count;
+          }        
+        } 
+      }
                  
-        if(relevance > absoluteRelevance)
-           absoluteRelevance = relevance;
-       
-        RelativeIndex currentDoc = {i, (float) relevance};
-        result.push_back(currentDoc);
+      if(relevance > absoluteRelevance) {
+        absoluteRelevance = relevance;
+      }
+           
+      RelativeIndex currentDoc = {i, (float) relevance};
+      result.push_back(currentDoc);
     }
     
     for (auto &doc: result) {
@@ -84,24 +85,43 @@ void SearchServer::printResult(const std::vector<std::vector<RelativeIndex>> &an
 
     for (int i = 0; i < answers.size(); ++i) {
 
-        if (answers[i].empty())
-            std::cout << "  result: false" << std::endl;
-        else {
-            std::cout << "  result: true" << std::endl;
-            std::cout << "  relevance:" << std::endl;
-        }
+      if (answers[i].empty()) {
+        std::cout << "  result: false" << std::endl;
+      }  
+      else {
+        std::cout << "  result: true" << std::endl;
+        std::cout << "  relevance:" << std::endl;
+      }
 
-        for (auto j : answers[i])
+      for (auto j : answers[i]) {
             std::cout << "    doc_id: " << j.doc_id << ", rank: " << j.rank << std::endl;
-
+      }  
         std::cout << std::endl;
     }
 }
 
-std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_format(const std::vector<std::vector<RelativeIndex>>& _indx) {
+std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_format(const std::vector<std::vector<RelativeIndex>>& _indx)
+{
   std::vector<std::vector<std::pair<int, float>>> json_set;
+  
 
-
+  for (int i = 0; i < _indx.size(); ++i) {
+    std::vector<std::pair<int, float>> idx;
+    if (_indx[i].empty()) {
+     
+      for(auto j : _indx[i]) {
+        idx.push_back(std::make_pair(-1, 0.0f));
+      }
+    }
+    else {
+    
+      for (auto j : _indx[i]) {
+        idx.push_back(std::make_pair(j.doc_id, j.rank));
+      }
+    }    
+      json_set.push_back(idx);
+  }
+    
   return json_set;
 }
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
@@ -160,7 +180,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
     relative_indixes = calculate_relevance(docs_ids, query_set);
     result.push_back(relative_indixes);
   }    
-  printResult(result);
+ // printResult(result);
   std::vector<std::vector<std::pair<int, float>>> json_answer = prepair_json_format(result);
   _converter.putAnswers(json_answer);
 

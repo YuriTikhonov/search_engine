@@ -15,14 +15,14 @@
 
 
 class ConverterJSON {
-    void check_config_file();
+   
     std::vector<std::string> source_files_paths;
     std::vector<std::string> source_files_contents;
     nlohmann::json config_parameters;
     nlohmann::json requests;
 
     public:
-
+    void check_config_file();
     ConverterJSON();
 
     std::vector<std::string> GetTextDocuments();

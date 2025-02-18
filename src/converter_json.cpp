@@ -15,7 +15,7 @@ void ConverterJSON::check_config_file() {
         throw std::invalid_argument("config file is empty");
     }
     else {
-        std::cout << config_parameters.at("config").at("name") << " started successfully" << std::endl;
+        std::cout << config_parameters.at("config").at("name") << " config file checked" << std::endl;
         source_files_paths = config_parameters.at("files");
     }
 }
@@ -30,17 +30,9 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
             throw std::range_error("Unable to open file: " + file_path);
         }
         else {
-            //std::stringstream file_content;
-            //file_content << file.rdbuf();
             std::string file_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             file.close();
-            source_files_contents.push_back(file_content);
-              
-           
-            //std::string file_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-            //source_files_contents.push_back(file_content);
-              
-           // file.close();  
+            source_files_contents.push_back(file_content); 
         }     
     }
 
@@ -75,7 +67,27 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 
 void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
     std::ofstream file_json("answers.json");
-    nlohmann::json answers_to_write = answers;
+    nlohmann::json answers_to_write, request;
+    std::string request_indx;
+    
+    for(size_t i = 0; i < answers.size();++i) {
+        request_indx = "Request00" + std::to_string(i + 1);
+    
+        if(answers[i].size() == 0) {
+            request[request_indx]["result"] = "false";
+           
+        }else {
+            request[request_indx]["result"] = "true";
+            
+            for(size_t j = 0; j < answers[i].size();++j) { 
+                nlohmann::json result_pair;
+                result_pair["doc_id"] = answers[i][j].first;
+                result_pair["rank"] = answers[i][j].second;
+                request[request_indx]["relevance"] += result_pair;  
+            } 
+        }
+    }
+    answers_to_write["answers"] = request;
     file_json << answers_to_write;
     file_json.close();
 }
