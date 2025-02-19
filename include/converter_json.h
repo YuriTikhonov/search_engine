@@ -31,5 +31,5 @@ class ConverterJSON {
 
     std::vector<std::string> GetRequests();
 
-     void putAnswers(std::vector<std::vector<std::pair<int, float>>>);
+    void putAnswers(std::vector<std::vector<std::pair<int, float>>>);
 };

@@ -22,13 +22,10 @@ class SearchServer {
     std::vector<std::string> create_unique_query_words(std::string& words);
     std::vector<RelativeIndex> calculate_relevance(const std::vector<size_t> &docList,
         const std::vector<std::string> &request);
-    void printResult(const std::vector<std::vector<RelativeIndex>> &answers);
+    void print_result(const std::vector<std::vector<RelativeIndex>> &answers);
     std::vector<std::vector<std::pair<int, float>>> prepair_json_format(const std::vector<std::vector<RelativeIndex>>& _indx);
-
-
 
     public:
     SearchServer( InvertedIndex idx);
-   
     std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
 };

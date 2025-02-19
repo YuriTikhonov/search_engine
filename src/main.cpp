@@ -4,11 +4,11 @@
 
 int main() {
     ConverterJSON converter;
-    InvertedIndex* inverted_index = new InvertedIndex(*inverted_index);
-    SearchServer server(*inverted_index);
+    InvertedIndex* invertedIndex = new InvertedIndex(*invertedIndex);
+    SearchServer server(*invertedIndex);
     std::vector<std::string> queries = converter.GetRequests(); 
     server.search(queries);
-    delete inverted_index;
+    delete invertedIndex;
     
     return 0;
 }

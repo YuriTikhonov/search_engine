@@ -1,4 +1,4 @@
-#include "converter_json.h"
+#include "../include/converter_json.h"
 
 
 void ConverterJSON::check_config_file() {
@@ -99,6 +99,5 @@ ConverterJSON::ConverterJSON() {
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what();
-        Sleep(int(5000));
     }   
 }

@@ -19,18 +19,18 @@ struct Entry {
 class InvertedIndex {
     std::vector<std::string> docs;
     std::map<std::string, std::vector<Entry>> freq_dictionary;
-    std::mutex freqDictionaryAccess;
-    std::istringstream docStream;    
+    std::mutex freq_dictionary_access;
+    std::istringstream doc_stream;    
 
     public:
-    //InvertedIndex() = default;
-    InvertedIndex(InvertedIndex&) {};
+    InvertedIndex() = default;
+    InvertedIndex(InvertedIndex& indx_) {};
   
 
     void UpdateDocumentBase(std::vector<std::string> input_docs);
 
     std::vector<Entry> GetWordCount(const std::string& word);
-    void printIndex();
+    void print_index();
     private:
     void fill_freq_dictionary(const std::string& in_word, size_t doc_num);
    
