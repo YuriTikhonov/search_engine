@@ -1,7 +1,7 @@
 #include "../include/InvertedIndex.h"
 
 void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_num) {
- 
+    
     if(freq_dictionary.find(in_word) == freq_dictionary.end()) {
         std::vector<Entry> entry{{doc_num,1}};
         std::lock_guard<std::mutex> lock(freq_dictionary_access);
@@ -52,7 +52,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     size_t start = 0;
     std::vector<std::thread> threads_pool{};
    
-    for(size_t i = 0; i < thread_numbers - 1; ++i) {
+    for(size_t i = 0; i < thread_numbers-1; ++i) {
 
         if(in_text_docs.size() > hard_ware_concurrency) {
             for(size_t j = start;j < (block_size + start);++j) {  
@@ -63,8 +63,8 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
             start += block_size;
         }
     }
- 
-    for(size_t j = 0; j < in_text_docs.size(); ++j) {
+  
+    for(size_t j = start; j < in_text_docs.size(); ++j) {
         Sleep(int(1));
         threads_pool.push_back(std::move(std::thread(process_text_by_thread, this,
         std::ref(in_text_docs[j]), std::ref(j))));
@@ -77,7 +77,8 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
 
 
 void InvertedIndex::UpdateDocumentBase( std::vector<std::string> in_text_docs) {
-    optimize_threads_pool_with_hardware(in_text_docs);  
+    optimize_threads_pool_with_hardware(in_text_docs);
+    //print_index();  
 }
  
 

@@ -4,6 +4,7 @@
 #include "windows.h"
 #include "nlohmann/json.hpp"
 #include <unordered_set>
+#include <set>
 
 struct RelativeIndex {
     size_t doc_id;
