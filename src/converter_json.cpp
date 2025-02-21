@@ -3,10 +3,6 @@
 
 void ConverterJSON::check_config_file() {
     std::ifstream file("config.json");
-    
-    if(!file.is_open()) {
-        throw std::range_error("config file is missing");
-    }
 
     file >> config_parameters;
     file.close();
@@ -15,7 +11,6 @@ void ConverterJSON::check_config_file() {
         throw std::invalid_argument("config file is empty");
     }
     else {
-        std::cout << config_parameters.at("config").at("name") << " config file checked" << std::endl;
         source_files_paths = config_parameters.at("files");
     }
 }
@@ -27,7 +22,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
         std::ifstream file(file_path);
 
         if (!file.is_open()) {
-            throw std::range_error("Unable to open file: " + file_path);
+            std::cout << "File not found: " << file_path << std::endl;
         }
         else {
             std::string file_content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -99,5 +94,5 @@ ConverterJSON::ConverterJSON() {
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what();
-    }   
+    }      
 }

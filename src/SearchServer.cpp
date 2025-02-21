@@ -31,7 +31,7 @@ std::vector<std::string> SearchServer::create_unique_query_words(std::string& wo
 
     return query_vec;
 } 
-std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<size_t> &docs_ids_vec,
+std::vector<RelativeIndex>  SearchServer::rate_relevance(const std::vector<size_t> &docs_ids_vec,
   const std::vector<std::string> &request) 
 {
   std::vector<RelativeIndex> result;
@@ -44,7 +44,6 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
    
     for (auto &word: request) {
       size_t frequency = 0;
-     
       std::vector<Entry>temp = _index.GetWordCount(word);
           
       for(auto& w : temp) {
@@ -59,8 +58,7 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
    if(absolute_relevance > max_abs_relevance) {
     max_abs_relevance = absolute_relevance;
    }
-   
-           
+       
     RelativeIndex current_doc = {i, (float) absolute_relevance};
       result.push_back(current_doc);
   }
@@ -91,24 +89,31 @@ std::vector<RelativeIndex>  SearchServer::calculate_relevance(const std::vector<
 } 
 
 void SearchServer::print_result(const std::vector<std::vector<RelativeIndex>> &answers) {
-  std::cout << std::endl;
+  std::cout << "{" << std::endl << "answers:" << std::endl;
 
   for (int i = 0; i < answers.size(); ++i) {
+    std::cout << "   request00" << i+1 << ":" << "{ " << std::endl;
 
     if (answers[i].empty()) {
-      std::cout << "  result: false" << std::endl;
+      std::cout << "         result: false" << std::endl;
     }  
     else {
-      std::cout << "  result: true" << std::endl;
-      std::cout << "  relevance:" << std::endl;
+      std::cout << "         result: true," << std::endl;
+      std::cout << "         relevance:{" << std::endl;
     }
 
     for (auto j : answers[i]) {
-      std::cout << "    doc_id: " << j.doc_id << ", rank: " << j.rank << std::endl;
-    }  
-    std::cout << std::endl;
+      std::cout << "             doc_id: " << j.doc_id << ", rank: " << j.rank << std::endl;
+    } 
+    if (!answers[i].empty()) { 
+    std::cout <<"        }" << std::endl;
+    std::cout <<"  }" << std::endl;
+    }
   }
+  std::cout <<"  }" << std::endl;
+  std::cout <<"}" << std::endl;
 }
+
 
 std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_format(const std::vector<std::vector<RelativeIndex>>& _indx)
 {
@@ -137,13 +142,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
   std::vector<std::vector<RelativeIndex>> result;
   std::vector<RelativeIndex> relative_indixes;
 
-  try {
-    _index.UpdateDocumentBase(_converter.GetTextDocuments());
-  }
-  catch (const std::exception& e) {
-    std::cout << "Caution! File is missing " << e.what(); //записать ошибку в лог
-  }
-                    
+  _index.UpdateDocumentBase(_converter.GetTextDocuments());           
   typedef std::pair<std::string,int> word_frec_pair;
 
   for (auto query : queries_input) {  
@@ -176,7 +175,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
       }     
     }
     docs_ids.assign(docs_id_set.begin(), docs_id_set.end());
-    relative_indixes = calculate_relevance(docs_ids, query_set);
+    relative_indixes = rate_relevance(docs_ids, query_set);
     result.push_back(relative_indixes);
   }    
   print_result(result);

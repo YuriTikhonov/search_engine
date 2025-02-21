@@ -12,8 +12,6 @@
 #include "InvertedIndex.h"
 
 
-
-
 class ConverterJSON {
    
     std::vector<std::string> source_files_paths;

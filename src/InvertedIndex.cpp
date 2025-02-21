@@ -77,8 +77,7 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
 
 
 void InvertedIndex::UpdateDocumentBase( std::vector<std::string> in_text_docs) {
-    optimize_threads_pool_with_hardware(in_text_docs);
-    //print_index();  
+    optimize_threads_pool_with_hardware(in_text_docs);  
 }
  
 
@@ -86,15 +85,3 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
        
     return freq_dictionary[word];
 }
-
-void InvertedIndex::print_index() {
-
-		for (auto ind:freq_dictionary) {
-		    std::cout << ind.first << ": ";
-
-		    for (auto vec:ind.second){
-			    std::cout << "{" <<vec.doc_id<< "," << vec.count <<"}";
-		    }
-           std::cout << std::endl; 
-	    }
-    }
