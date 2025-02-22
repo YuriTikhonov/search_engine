@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+message Record
+{
+  required string name =1;
+  required string family = 2;
+  optional int32 age = 3;
+  optional bool married = 4;
+}
