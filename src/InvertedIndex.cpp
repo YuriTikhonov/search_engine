@@ -1,4 +1,4 @@
-#include "../include/InvertedIndex.h"
+#include "InvertedIndex.h"
 
 void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_num) {
     
@@ -55,19 +55,17 @@ void InvertedIndex::optimize_threads_pool_with_hardware(const std::vector<std::s
     for(size_t i = 0; i < thread_numbers-1; ++i) {
 
         if(in_text_docs.size() > hard_ware_concurrency) {
-            for(size_t j = start;j < (block_size + start);++j) {  
-                Sleep(int(1));        
-                threads_pool.push_back(std::move(std::thread(process_text_by_thread,this,
-                std::ref(in_text_docs[j]), std::ref(j))));
+            for(size_t j = start;j < (block_size + start);++j) {   
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));      
+                threads_pool.emplace_back(&InvertedIndex::process_text_by_thread, this, std::ref(in_text_docs[j]), std::ref(j));
             }
             start += block_size;
         }
     }
   
     for(size_t j = start; j < in_text_docs.size(); ++j) {
-        Sleep(int(1));
-        threads_pool.push_back(std::move(std::thread(process_text_by_thread, this,
-        std::ref(in_text_docs[j]), std::ref(j))));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
+        threads_pool.emplace_back(&InvertedIndex::process_text_by_thread, this, std::ref(in_text_docs[j]), std::ref(j));
     }
 
     for(auto& t: threads_pool) {

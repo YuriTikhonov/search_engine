@@ -1,9 +1,12 @@
-#include "../include/converter_json.h"
-
+#include "converter_json.h"
 
 void ConverterJSON::check_config_file() {
     std::ifstream file("config.json");
 
+    if(!file.is_open()) {
+        throw std::runtime_error("config file is missing\n");
+    }
+   
     file >> config_parameters;
     file.close();
 
@@ -49,7 +52,7 @@ int ConverterJSON::GetResponsesLimit() {
 std::vector<std::string> ConverterJSON::GetRequests() {
     std::ifstream request_file("requests.json");
     std::vector<std::string> requests_vector;
-
+    
     if(request_file.is_open()) {
         request_file >> requests;
         requests_vector = requests.at("requests");
@@ -89,10 +92,5 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> a
 
 
 ConverterJSON::ConverterJSON() {
-    try {
-        check_config_file();
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what();
-    }      
+    check_config_file();
 }

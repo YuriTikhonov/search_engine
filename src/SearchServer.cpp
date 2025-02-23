@@ -1,4 +1,4 @@
-#include "../include/SearchServer.h"
+#include "SearchServer.h"
 
  SearchServer::SearchServer( InvertedIndex idx):  _index(idx) {};
 
@@ -7,7 +7,7 @@ std::vector<std::string> SearchServer::create_unique_query_words(std::string& wo
     std::vector<std::string> query_vec;
     int queries_count = 0;
         
-      //количество запросов < 1000
+      //number of requests < 1000
       if(queries_count < 1000) {
         std::istringstream query_stream(words);        
         int query_word_count = 0;
@@ -16,7 +16,7 @@ std::vector<std::string> SearchServer::create_unique_query_words(std::string& wo
           std::string word;
           query_stream >> word;
             
-          // количество слов в запросе от 1 до 10
+          // the number of words in a query is from 1 to 10
           if(word != "" && query_word_count < 10) {
             query_set.insert(word);
             query_word_count++;

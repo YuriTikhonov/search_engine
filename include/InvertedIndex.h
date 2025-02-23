@@ -25,16 +25,11 @@ class InvertedIndex {
     public:
     InvertedIndex() = default;
     InvertedIndex(InvertedIndex& indx_) {};
-
     void UpdateDocumentBase(std::vector<std::string> input_docs);
-
     std::vector<Entry> GetWordCount(const std::string& word);
 
     private:
-
     void fill_freq_dictionary(const std::string& in_word, size_t doc_num);
-
     void process_text_by_thread(const std::string& in_text, size_t& n);
-
     void optimize_threads_pool_with_hardware(const std::vector<std::string>& in_text_docs);
 };

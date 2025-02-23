@@ -3,12 +3,18 @@
 #include "InvertedIndex.h"
 
 int main() {
-    ConverterJSON converter; 
-    std::cout << "Search Engine App started" << std::endl;
-    InvertedIndex invertedIndex;
-    SearchServer server(invertedIndex);
-    std::vector<std::string> queries = converter.GetRequests(); 
-    server.search(queries);
-    
+
+    try {
+        ConverterJSON converter;
+        std::cout << "Search engine started" << std::endl; 
+        InvertedIndex invertedIndex;
+        SearchServer server(invertedIndex);
+        std::vector<std::string> queries = converter.GetRequests(); 
+        server.search(queries);
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what();
+    }
+        
     return 0;
 }
