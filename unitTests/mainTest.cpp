@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-
 #include "InvertedIndex.h"
 #include "SearchServer.h"
+
 
 TEST(sample_test_case, sample_test)
 {
@@ -38,6 +38,7 @@ TEST(TestCaseInvertedIndex, TestBasic) {
   TestInvertedIndexFunctionality(docs_t,test_requests, expected);
 }
 
+
 TEST(TestCaseInvertedIndex, TestBasic2) {
   const vector<string> docs = {
     "milk milk milk milk water water water",
@@ -68,6 +69,7 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
     TestInvertedIndexFunctionality(docs_m, requests, expected);
   }
 
+  
 TEST(TestCaseSearchServer, TestTop5) {
   const vector<string> docs_5 = {
   "london is the capital of great britain",

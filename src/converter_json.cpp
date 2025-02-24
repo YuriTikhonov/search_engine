@@ -1,10 +1,11 @@
 #include "converter_json.h"
 
+
 void ConverterJSON::check_config_file() {
     std::ifstream file("config.json");
 
     if(!file.is_open()) {
-        throw std::runtime_error("config file is missing\n");
+        throw std::runtime_error("config file is missing");
     }
    
     file >> config_parameters;

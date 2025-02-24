@@ -1,4 +1,5 @@
 #pragma once
+
 #include "converter_json.h"
 
 #include <map>
@@ -6,6 +7,7 @@
 #include <thread>
 #include <mutex>
 #include <algorithm>
+
 
 struct Entry {
     size_t doc_id, count;

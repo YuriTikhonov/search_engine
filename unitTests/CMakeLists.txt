@@ -21,9 +21,7 @@ add_executable(${PROJECT_NAME}
        mainTest.cpp ../include/InvertedIndex.h ../src/InvertedIndex.cpp ../include/converter_json.h ../include/SearchServer.h ../src/converter_json.cpp ../src/SearchServer.cpp
         )
 
-#target_include_directories(${PROJECT_NAME} PUBLIC ../include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${MY_INCLUDE_DIR})
-
 
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest gtest_main nlohmann_json::nlohmann_json)
 

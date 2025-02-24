@@ -1,7 +1,9 @@
 #include "SearchServer.h"
 
+
  SearchServer::SearchServer( InvertedIndex idx):  _index(idx) {};
 
+ 
 std::vector<std::string> SearchServer::create_unique_query_words(std::string& words) {
     std::unordered_set<std::string>query_set;
     std::vector<std::string> query_vec;
@@ -31,6 +33,8 @@ std::vector<std::string> SearchServer::create_unique_query_words(std::string& wo
 
     return query_vec;
 } 
+
+
 std::vector<RelativeIndex>  SearchServer::rate_relevance(const std::vector<size_t> &docs_ids_vec,
   const std::vector<std::string> &request) 
 {
@@ -88,6 +92,7 @@ std::vector<RelativeIndex>  SearchServer::rate_relevance(const std::vector<size_
   return result;
 } 
 
+
 void SearchServer::print_result(const std::vector<std::vector<RelativeIndex>> &answers) {
   std::cout << "{" << std::endl << "answers:" << std::endl;
 
@@ -138,6 +143,8 @@ std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_forma
     
   return json_set;
 }
+
+
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
   std::vector<std::vector<RelativeIndex>> result;
   std::vector<RelativeIndex> relative_indixes;

@@ -1,5 +1,6 @@
 #include "InvertedIndex.h"
 
+
 void InvertedIndex::fill_freq_dictionary(const std::string& in_word, size_t doc_num) {
     
     if(freq_dictionary.find(in_word) == freq_dictionary.end()) {

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "converter_json.h"
 #include "InvertedIndex.h"
 #include "windows.h"
