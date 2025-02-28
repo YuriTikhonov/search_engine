@@ -66,6 +66,11 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 
 void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
     std::ofstream file_json("answers.json");
+    
+    if(!file_json.is_open()) {
+        throw std::runtime_error("Can't open answers.json file");
+    }
+    
     nlohmann::json answers_to_write, request;
     std::string request_indx;
     
@@ -87,7 +92,7 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> a
         }
     }
     answers_to_write["answers"] = request;
-    file_json << answers_to_write;
+    file_json << answers_to_write.dump(4);
     file_json.close();
 }
 
