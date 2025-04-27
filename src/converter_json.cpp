@@ -7,7 +7,6 @@ void ConverterJSON::check_config_file() {
     if(!file.is_open()) {
         throw std::runtime_error("config file is missing");
     }
-   
     file >> config_parameters;
     file.close();
 

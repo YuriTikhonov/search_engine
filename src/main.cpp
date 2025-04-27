@@ -4,7 +4,6 @@
 
 
 int main() {
-
     try {
         ConverterJSON converter;
         std::cout << "Search engine started" << std::endl; 

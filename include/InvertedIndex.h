@@ -1,7 +1,5 @@
 #pragma once
-
 #include "converter_json.h"
-
 #include <map>
 #include <iterator>
 #include <thread>

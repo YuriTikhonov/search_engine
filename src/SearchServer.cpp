@@ -1,9 +1,9 @@
 #include "SearchServer.h"
 
 
- SearchServer::SearchServer( InvertedIndex idx):  _index(idx) {};
+SearchServer::SearchServer( InvertedIndex idx):  _index(idx) {};
 
- 
+
 std::vector<std::string> SearchServer::create_unique_query_words(std::string& words) {
     std::unordered_set<std::string>query_set;
     std::vector<std::string> query_vec;
@@ -39,7 +39,6 @@ std::vector<RelativeIndex>  SearchServer::rate_relevance(const std::vector<size_
   const std::vector<std::string> &request) 
 {
   std::vector<RelativeIndex> result;
-  
   size_t max_abs_relevance = 0;
    
   for (auto &i:docs_ids_vec) {
@@ -128,13 +127,13 @@ std::vector<std::vector<std::pair<int, float>>> SearchServer::prepair_json_forma
     std::vector<std::pair<int, float>> idx;
     if (_indx[i].empty()) {
      
-      for(auto j : _indx[i]) {
+      for(auto j: _indx[i]) {
         idx.push_back(std::make_pair(-1, 0.0f));
       }
     }
     else {
     
-      for (auto j : _indx[i]) {
+      for (auto j: _indx[i]) {
         idx.push_back(std::make_pair(j.doc_id, j.rank));
       }
     }    
@@ -184,7 +183,9 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
     docs_ids.assign(docs_id_set.begin(), docs_id_set.end());
     relative_indixes = rate_relevance(docs_ids, query_set);
     result.push_back(relative_indixes);
-  }    
+  } 
+  
+  
   print_result(result);
   std::vector<std::vector<std::pair<int, float>>> json_answer = prepair_json_format(result);
   _converter.putAnswers(json_answer);
